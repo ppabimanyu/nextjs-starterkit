@@ -3,9 +3,10 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "./prisma";
 import { env } from "@/env";
 import { sendEmail } from "./mail-sender";
-// If your Prisma file is located elsewhere, you can change the path
+import { twoFactor } from "better-auth/plugins";
 
 export const auth = betterAuth({
+  appName: env.NEXT_PUBLIC_APP_NAME,
   database: prismaAdapter(prisma, {
     provider: "postgresql", // or "mysql", "postgresql", ...etc
   }),
@@ -44,4 +45,7 @@ export const auth = betterAuth({
       clientSecret: env.BETTER_AUTH_GOOGLE_CLIENT_SECRET || "",
     },
   },
+  plugins: [twoFactor()],
 });
+
+export type Session = typeof auth.$Infer.Session;

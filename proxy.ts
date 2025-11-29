@@ -5,6 +5,9 @@ export function proxy(request: NextRequest) {
   if (request.nextUrl.pathname === "/auth") {
     return NextResponse.redirect(new URL("/auth/sign-in", request.url));
   }
+  if (request.nextUrl.pathname === "/settings") {
+    return NextResponse.redirect(new URL("/settings/profile", request.url));
+  }
 
   return NextResponse.next();
 }

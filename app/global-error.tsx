@@ -19,7 +19,7 @@ export default function GlobalError({
 }) {
   return (
     // global-error must include html and body tags
-    <html>
+    <html lang="en">
       <body className="min-h-screen bg-background flex items-center justify-center p-6">
         <div className="w-full max-w-md text-center space-y-4">
           <div className="space-y-2">
