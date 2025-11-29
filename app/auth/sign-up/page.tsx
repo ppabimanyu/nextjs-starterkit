@@ -12,13 +12,11 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { env } from "@/env";
-import { trpc } from "@/lib/trpc/client";
 import { useState } from "react";
 import { Spinner } from "@/components/ui/spinner";
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
 import SocialAuth from "../_components/social-auth";
-import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import Footer from "../_components/footer";
@@ -52,9 +50,9 @@ export default function SignUpPage() {
     },
     onSubmit: async ({ value }) => {
       const { error } = await authClient.signUp.email({
-        email: value.email,
-        password: value.password,
-        name: value.name,
+        email: value.email.toLowerCase().trim(),
+        password: value.password.trim(),
+        name: value.name.trim(),
         callbackURL: "/dashboard",
       });
 

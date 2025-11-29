@@ -32,15 +32,15 @@ export default function SignInPage() {
     defaultValues: {
       email: "",
       password: "",
-      rememberMe: false,
+      rememberMe: true,
     },
     validators: {
       onChange: signInFormSchema,
     },
     onSubmit: async ({ value }) => {
       const { error } = await authClient.signIn.email({
-        email: value.email,
-        password: value.password,
+        email: value.email.toLowerCase().trim(),
+        password: value.password.trim(),
         rememberMe: value.rememberMe,
         callbackURL: "/dashboard",
       });
@@ -122,14 +122,16 @@ export default function SignInPage() {
                   </signInForm.Field>
                 </div>
                 <Field>
-                  <signInForm.Subscribe selector={(state) => [state.canSubmit]}>
-                    {([canSubmit]) => (
+                  <signInForm.Subscribe
+                    selector={(state) => [state.canSubmit, state.isSubmitting]}
+                  >
+                    {([canSubmit, isSubmitting]) => (
                       <Button
                         type="button"
                         onClick={signInForm.handleSubmit}
-                        disabled={!canSubmit}
+                        disabled={!canSubmit || isSubmitting}
                       >
-                        Sign In
+                        Sign In {isSubmitting && <Spinner />}
                       </Button>
                     )}
                   </signInForm.Subscribe>

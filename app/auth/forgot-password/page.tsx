@@ -35,12 +35,13 @@ export default function ForgotPasswordPage() {
     },
     onSubmit: async ({ value }) => {
       const { error } = await authClient.requestPasswordReset({
-        email: value.email,
+        email: value.email.toLowerCase().trim(),
         redirectTo: "/auth/reset-password",
       });
 
       if (error) {
         toast.error(error.message);
+        return;
       }
       setIsSubmitted(true);
     },
