@@ -13,24 +13,12 @@ import { FieldError } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
-import { trpc } from "@/lib/trpc/client";
+import { authClient } from "@/lib/auth-client";
 import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
 export default function SettingsAccountPage() {
-  const changePasswordMutation = trpc.user.changePassword.useMutation({
-    onSuccess: () => {
-      toast.success("Password changed successfully");
-    },
-    onError: (err) => {
-      toast.error(`Failed to change password, ${err.message}`);
-    },
-    onSettled: () => {
-      form.reset();
-    },
-  });
-
   const form = useForm({
     defaultValues: {
       currentPassword: "",
@@ -52,7 +40,17 @@ export default function SettingsAccountPage() {
         }),
     },
     onSubmit: async ({ value }) => {
-      await changePasswordMutation.mutateAsync(value);
+      const { error } = await authClient.changePassword({
+        currentPassword: value.currentPassword,
+        newPassword: value.newPassword,
+      });
+      if (error) {
+        toast.error(`Failed to change password, ${error.message}`);
+        form.reset();
+        return;
+      }
+      toast.success("Password changed successfully");
+      form.reset();
     },
   });
 

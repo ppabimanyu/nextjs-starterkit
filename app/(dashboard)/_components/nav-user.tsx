@@ -27,6 +27,10 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
+import { Spinner } from "@/components/ui/spinner";
 
 const userData: {
   name: string;
@@ -40,6 +44,14 @@ const userData: {
 
 export function NavUser() {
   const { isMobile } = useSidebar();
+  const router = useRouter();
+
+  const signOutMutation = useMutation({
+    mutationFn: () => authClient.signOut(),
+    onSuccess: () => {
+      router.replace("/auth/sign-in");
+    },
+  });
 
   return (
     <SidebarMenu>
@@ -89,9 +101,12 @@ export function NavUser() {
               </Link>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => signOutMutation.mutate()}
+              disabled={signOutMutation.isPending}
+            >
               <LogOut />
-              Log out
+              Log out {signOutMutation.isPending && <Spinner />}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

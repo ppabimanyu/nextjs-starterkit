@@ -29,30 +29,11 @@ export const userRouter = createTRPCRouter({
     .input(
       z.object({
         name: z.string().min(1, "Name is required"),
-        email: z.email(),
+        image: z.string().optional(),
       })
     )
     .mutation(async ({ input, ctx }) => {
       const userId = ctx.session!.user.id;
-
-      const existingUser = await ctx.db.user.findFirst({
-        where: {
-          email: input.email,
-          NOT: {
-            id: userId,
-          },
-        },
-        select: {
-          id: true,
-        },
-      });
-
-      if (existingUser) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Email already exists",
-        });
-      }
 
       await ctx.db.user.update({
         where: {
@@ -60,7 +41,7 @@ export const userRouter = createTRPCRouter({
         },
         data: {
           name: input.name,
-          email: input.email,
+          image: input.image,
         },
       });
     }),

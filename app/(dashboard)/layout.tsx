@@ -5,12 +5,21 @@ import {
 } from "@/components/ui/sidebar";
 import { AppSidebar } from "./_components/app-sidebar";
 import { env } from "@/env";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) {
+    return redirect("/auth/sign-in");
+  }
   return (
     <SidebarProvider>
       <AppSidebar />
