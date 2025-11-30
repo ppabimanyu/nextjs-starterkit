@@ -1,9 +1,15 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { LockIcon, Settings, ShieldCheck, UserIcon } from "lucide-react";
+import {
+  LockIcon,
+  Palette,
+  ShieldCheck,
+  UserIcon,
+  MonitorSmartphone,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -11,22 +17,27 @@ const sidebarNavItems = [
   {
     title: "Profile",
     href: "/settings/profile",
-    icon: <UserIcon size={16} />,
+    icon: <UserIcon size={18} />,
   },
   {
     title: "Password",
     href: "/settings/password",
-    icon: <LockIcon size={16} />,
+    icon: <LockIcon size={18} />,
+  },
+  {
+    title: "Sessions",
+    href: "/settings/sessions",
+    icon: <MonitorSmartphone size={18} />,
   },
   {
     title: "Two-Factor Auth",
     href: "/settings/two-factor-auth",
-    icon: <ShieldCheck size={16} />,
+    icon: <ShieldCheck size={18} />,
   },
   {
     title: "Appearance",
     href: "/settings/appearance",
-    icon: <Settings size={16} />,
+    icon: <Palette size={18} />,
   },
 ];
 
@@ -38,40 +49,36 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
   const pathname = usePathname();
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="">
-        <h2 className="text-2xl font-bold">Settings</h2>
+    <div className="flex flex-col h-full max-w-6xl w-full">
+      <div className="space-y-0.5">
+        <h2 className="text-2xl font-bold tracking-tight">Settings</h2>
         <p className="text-muted-foreground">
-          Manage your account settings and set e-mail preferences.
+          Manage your account settings and security preferences.
         </p>
       </div>
-      <Separator className="my-4" />
-      <div className="flex flex-col h-full space-y-4 md:space-y-8 md:flex-row space-x-4">
-        <aside className="lg:w-56">
-          <nav
-            className={
-              "flex overflow-x-scroll scrollbar-hidden space-x-2 md:flex-col"
-            }
-          >
+      <Separator className="my-6" />
+      <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-6 lg:space-y-0">
+        <aside className="lg:w-1/5">
+          <nav className="flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-1 overflow-x-auto scrollbar-hide px-4 lg:px-0 pb-2 lg:pb-0">
             {sidebarNavItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "justify-start text-left",
+                  buttonVariants({ variant: "ghost" }),
                   pathname === item.href
                     ? "bg-muted hover:bg-muted"
                     : "hover:bg-transparent hover:underline",
-                  "inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2"
+                  "justify-start"
                 )}
               >
-                <div className="mr-2">{item.icon}</div>
+                <span className="mr-1">{item.icon}</span>
                 {item.title}
               </Link>
             ))}
           </nav>
         </aside>
-        <div className="w-full lg:max-w-2xl">{children}</div>
+        <div className="flex-1 lg:max-w-2xl">{children}</div>
       </div>
     </div>
   );

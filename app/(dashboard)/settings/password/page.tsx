@@ -10,7 +10,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { FieldError } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
 import { authClient } from "@/lib/auth-client";
@@ -18,6 +17,9 @@ import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { z } from "zod";
+import { ShieldCheck, KeyRound } from "lucide-react";
+import { PasswordInput } from "@/components/password-input";
+import { Separator } from "@/components/ui/separator";
 
 export default function SettingsAccountPage() {
   const form = useForm({
@@ -83,68 +85,91 @@ export default function SettingsAccountPage() {
     <div className="space-y-4">
       <Card>
         <CardHeader>
-          <CardTitle>Password</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <ShieldCheck className="size-5" />
+            Change Password
+          </CardTitle>
           <CardDescription>
-            Ensure your account is using a long, random password to stay secure.
+            Update your password to keep your account secure. Make sure
+            it&apos;s strong and unique.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-6">
+          {/* Current Password */}
           <form.Field name="currentPassword">
             {(field) => (
-              <div className="space-y-2">
+              <div className="space-y-2 max-w-md">
                 <Label
                   htmlFor="current-password"
                   className="flex items-center justify-between"
                 >
-                  Current Password{" "}
+                  Current Password
                   <Button
                     variant={"link"}
-                    className="p-0"
+                    className="p-0 h-auto font-normal text-sm text-muted-foreground hover:text-primary"
                     onClick={() => forgotPasswordMutation.mutate()}
                     disabled={forgotPasswordMutation.isPending}
                   >
-                    Forgot Password?{" "}
-                    {forgotPasswordMutation.isPending && <Spinner />}
+                    Forgot your password?{" "}
+                    {forgotPasswordMutation.isPending && (
+                      <Spinner className="ml-1 size-3" />
+                    )}
                   </Button>
                 </Label>
-                <Input
+                <PasswordInput
                   id="current-password"
-                  type="password"
+                  required
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
+                  placeholder="Enter current password"
                 />
                 <FieldError>{field.state.meta.errors[0]?.message}</FieldError>
               </div>
             )}
           </form.Field>
-          <form.Field name="newPassword">
-            {(field) => (
-              <div className="space-y-2">
-                <Label htmlFor="new-password">New Password</Label>
-                <Input
-                  id="new-password"
-                  type="password"
-                  value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                />
-                <FieldError>{field.state.meta.errors[0]?.message}</FieldError>
-              </div>
-            )}
-          </form.Field>
-          <form.Field name="confirmPassword">
-            {(field) => (
-              <div className="space-y-2">
-                <Label htmlFor="confirm-password">Confirm Password</Label>
-                <Input
-                  id="confirm-password"
-                  type="password"
-                  value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                />
-                <FieldError>{field.state.meta.errors[0]?.message}</FieldError>
-              </div>
-            )}
-          </form.Field>
+
+          <Separator />
+
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+              <KeyRound className="size-4" />
+              <span>New Credentials</span>
+            </div>
+
+            {/* New Password */}
+            <form.Field name="newPassword">
+              {(field) => (
+                <div className="space-y-2 max-w-md">
+                  <Label htmlFor="new-password">New Password</Label>
+                  <PasswordInput
+                    id="new-password"
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    showStrength
+                    showRequirements
+                    placeholder="Enter new password"
+                  />
+                  <FieldError>{field.state.meta.errors[0]?.message}</FieldError>
+                </div>
+              )}
+            </form.Field>
+
+            {/* Confirm Password */}
+            <form.Field name="confirmPassword">
+              {(field) => (
+                <div className="space-y-2 max-w-md">
+                  <Label htmlFor="confirm-password">Confirm New Password</Label>
+                  <PasswordInput
+                    id="confirm-password"
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    placeholder="Confirm new password"
+                  />
+                  <FieldError>{field.state.meta.errors[0]?.message}</FieldError>
+                </div>
+              )}
+            </form.Field>
+          </div>
         </CardContent>
         <CardFooter>
           <form.Subscribe
@@ -156,7 +181,7 @@ export default function SettingsAccountPage() {
                 disabled={!canSubmit || isSubmitting}
                 onClick={() => form.handleSubmit()}
               >
-                Save Password {isSubmitting && <Spinner />}
+                Update Password {isSubmitting && <Spinner />}
               </Button>
             )}
           </form.Subscribe>

@@ -17,12 +17,13 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const navMainItems: {
   title: string;
   url: string;
   icon?: LucideIcon;
-  isActive?: boolean;
   items?: {
     title: string;
     url: string;
@@ -30,14 +31,15 @@ const navMainItems: {
 }[] = [
   {
     title: "Dashboard",
-    url: "#",
+    url: "/dashboard",
     icon: SquareTerminal,
-    isActive: true,
     items: [],
   },
 ];
 
 export function NavMain() {
+  const pathname = usePathname();
+
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
@@ -46,9 +48,14 @@ export function NavMain() {
           if (item.items?.length === 0) {
             return (
               <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton tooltip={item.title}>
+                <SidebarMenuButton
+                  tooltip={item.title}
+                  isActive={pathname === item.url}
+                >
                   {item.icon && <item.icon />}
-                  <span>{item.title}</span>
+                  <Link href={item.url}>
+                    <span>{item.title}</span>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             );
@@ -57,7 +64,7 @@ export function NavMain() {
             <Collapsible
               key={item.title}
               asChild
-              defaultOpen={item.isActive}
+              defaultOpen={pathname === item.url}
               className="group/collapsible"
             >
               <SidebarMenuItem>
@@ -73,9 +80,9 @@ export function NavMain() {
                     {item.items?.map((subItem) => (
                       <SidebarMenuSubItem key={subItem.title}>
                         <SidebarMenuSubButton asChild>
-                          <a href={subItem.url}>
+                          <Link href={subItem.url}>
                             <span>{subItem.title}</span>
-                          </a>
+                          </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                     ))}

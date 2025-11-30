@@ -66,10 +66,10 @@
 - [x] Password management
   - [X] Update Password
 - [ ] Two-factor authentication (2FA)
-- [ ] Session management
-  - [ ] Active sessions page
-  - [ ] Device management
-  - [ ] Revoke sessions
+- [/] Session management
+  - [x] Active sessions page
+  - [/] Device management
+  - [/] Revoke sessions
 
 #### Appearance
 

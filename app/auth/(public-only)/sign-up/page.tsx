@@ -22,8 +22,7 @@ import Link from "next/link";
 import Footer from "../../_components/footer";
 import SuccessSignUpPage from "../../_components/success-sign-up";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import Loading from "@/app/loading";
+import { PasswordInput } from "@/components/password-input";
 
 const signUpFormSchema = z
   .object({
@@ -90,7 +89,7 @@ export default function SignUpPage() {
                 Welcome to {env.NEXT_PUBLIC_APP_NAME}
               </h1>
               <FieldDescription>
-                Sign in or create an account to continue
+                Create your account to get started
               </FieldDescription>
             </div>
             <form onSubmit={signUpForm.handleSubmit}>
@@ -136,12 +135,14 @@ export default function SignUpPage() {
                     {(field) => (
                       <Field>
                         <FieldLabel htmlFor="password">Password</FieldLabel>
-                        <Input
+                        <PasswordInput
                           id="password"
-                          type="password"
                           required
                           value={field.state.value}
                           onChange={(e) => field.handleChange(e.target.value)}
+                          showStrength
+                          showRequirements
+                          compact
                         />
                         <FieldError>
                           {field.state.meta.errors[0]?.message}
@@ -155,9 +156,8 @@ export default function SignUpPage() {
                         <FieldLabel htmlFor="confirmPassword">
                           Confirm Password
                         </FieldLabel>
-                        <Input
+                        <PasswordInput
                           id="confirmPassword"
-                          type="password"
                           required
                           value={field.state.value}
                           onChange={(e) => field.handleChange(e.target.value)}

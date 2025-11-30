@@ -11,7 +11,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
-import { Monitor, Moon, Sun } from "lucide-react";
+import { Monitor, Moon, Palette, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
 export default function SettingsAppearancePage() {
@@ -21,7 +21,10 @@ export default function SettingsAppearancePage() {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Appearance</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <Palette className="size-5" />
+            Appearance
+          </CardTitle>
           <CardDescription>
             Customize the appearance of the application. Automatically switch
             between day and night themes.

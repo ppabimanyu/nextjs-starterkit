@@ -1,7 +1,6 @@
 "use client";
 
 import LoadingContent from "@/components/loading-content";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -20,9 +19,13 @@ import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { z } from "zod";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { User, Mail, Trash2, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 
 export default function SettingsProfilePage() {
   const { data, error, isPending } = authClient.useSession();
+
   if (error) {
     toast.error("Failed to get session data");
   }
@@ -106,20 +109,54 @@ export default function SettingsProfilePage() {
     return <LoadingContent />;
   }
 
+  const userInitials = data?.user.name
+    ? data.user.name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+        .substring(0, 2)
+    : "U";
+
   return (
     <div className="space-y-4">
       <Card>
         <CardHeader>
-          <CardTitle>Profile Information</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <User className="size-5" />
+            Profile Information
+          </CardTitle>
           <CardDescription>
-            {"Update your account's profile information and email address."}
+            Update your account&apos;s profile information and public profile.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-6">
+          <div className="flex items-center gap-6">
+            <Avatar className="h-20 w-20">
+              <AvatarImage
+                src={data?.user.image || ""}
+                alt={data?.user.name || "User"}
+              />
+              <AvatarFallback className="text-lg">
+                {userInitials}
+              </AvatarFallback>
+            </Avatar>
+            <div className="space-y-1">
+              <h3 className="font-medium">Profile Picture</h3>
+              <p className="text-sm text-muted-foreground">
+                JPG, GIF or PNG. Max size of 800K.
+              </p>
+              {/* Placeholder for image upload functionality */}
+              <Button variant="outline" size="sm" disabled>
+                Upload New Picture
+              </Button>
+            </div>
+          </div>
+          <Separator />
           <profileForm.Field name="name">
             {(field) => (
-              <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
+              <div className="space-y-2 max-w-md">
+                <Label htmlFor="name">Display Name</Label>
                 <Input
                   id="name"
                   placeholder="Your Name"
@@ -127,6 +164,10 @@ export default function SettingsProfilePage() {
                   onChange={(e) => field.handleChange(e.target.value)}
                 />
                 <FieldError>{field.state.meta.errors[0]?.message}</FieldError>
+                <p className="text-[0.8rem] text-muted-foreground">
+                  This is your public display name. It can be your real name or
+                  a pseudonym.
+                </p>
               </div>
             )}
           </profileForm.Field>
@@ -141,38 +182,63 @@ export default function SettingsProfilePage() {
                 onClick={profileForm.handleSubmit}
                 disabled={!canSubmit || isSubmitting}
               >
-                Save {isSubmitting && <Spinner />}
+                Save Changes {isSubmitting && <Spinner />}
               </Button>
             )}
           </profileForm.Subscribe>
         </CardFooter>
       </Card>
+
       <Card>
         <CardHeader>
-          <CardTitle>Update Email</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <Mail className="size-5" />
+            Email Address
+          </CardTitle>
           <CardDescription>
-            {
-              "Update your account's email. You need to verify the new email address before it takes effect."
-            }
+            Manage your email address and verification status.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <Label htmlFor="email" className="flex items-center gap-2">
-            Email
-            <Badge variant="outline">Primary Sign-In</Badge>
-          </Label>
-          <Input id="email" value={data?.user.email} disabled />
+        <CardContent className="space-y-6">
+          <div className="space-y-2 max-w-md">
+            <Label htmlFor="current-email">Current Email</Label>
+            <div className="flex items-center gap-2">
+              <Input
+                id="current-email"
+                value={data?.user.email}
+                disabled
+                className="bg-muted"
+              />
+              {data?.user.emailVerified ? (
+                <div className="flex items-center gap-1.5 text-sm text-green-600 font-medium px-2 py-1 rounded-md bg-green-500/10 border border-green-500/20">
+                  <CheckCircle2 className="size-4" />
+                  Verified
+                </div>
+              ) : (
+                <div className="flex items-center gap-1.5 text-sm text-amber-600 font-medium px-2 py-1 rounded-md bg-amber-500/10 border border-amber-500/20">
+                  <AlertTriangle className="size-4" />
+                  Unverified
+                </div>
+              )}
+            </div>
+          </div>
+
+          <Separator />
+
           <emailForm.Field name="email">
             {(field) => (
-              <div className="space-y-2">
-                <Label htmlFor="email">New Email</Label>
+              <div className="space-y-2 max-w-md">
+                <Label htmlFor="new-email">New Email Address</Label>
                 <Input
-                  id="email"
-                  placeholder="Your new email"
+                  id="new-email"
+                  placeholder="Enter new email address"
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
                 />
                 <FieldError>{field.state.meta.errors[0]?.message}</FieldError>
+                <p className="text-[0.8rem] text-muted-foreground">
+                  You will need to verify your new email address.
+                </p>
               </div>
             )}
           </emailForm.Field>
@@ -187,25 +253,39 @@ export default function SettingsProfilePage() {
                 onClick={emailForm.handleSubmit}
                 disabled={!canSubmit || isSubmitting}
               >
-                Send Verification Email {isSubmitting && <Spinner />}
+                Update Email {isSubmitting && <Spinner />}
               </Button>
             )}
           </emailForm.Subscribe>
         </CardFooter>
       </Card>
-      <Card className="border-destructive/50">
+
+      <Card className="border-destructive/20 shadow-none">
         <CardHeader>
-          <CardTitle className="text-destructive">Delete Account</CardTitle>
+          <CardTitle className="flex items-center gap-2 text-destructive">
+            <Trash2 className="size-5" />
+            Delete Account
+          </CardTitle>
           <CardDescription>
-            Permanently delete your account. This action cannot be undone.
+            Permanently delete your account and all associated data.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground">
-            Once your account is deleted, all of its resources and data will be
-            permanently deleted. Before deleting your account, please download
-            any data or information that you wish to retain.
-          </p>
+          <div className="rounded-md bg-destructive/10 p-4 border border-destructive/20">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="size-5 text-destructive mt-0.5" />
+              <div className="space-y-1">
+                <h4 className="font-medium text-destructive">
+                  Warning: This action is irreversible
+                </h4>
+                <p className="text-sm text-muted-foreground">
+                  Once your account is deleted, all of its resources and data
+                  will be permanently deleted. Please download any data you wish
+                  to retain before proceeding.
+                </p>
+              </div>
+            </div>
+          </div>
         </CardContent>
         <CardFooter>
           <Button

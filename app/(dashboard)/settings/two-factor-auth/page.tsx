@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -7,37 +9,93 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Badge } from "@/components/ui/badge";
-import { ShieldCheck } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import {
+  ShieldCheck,
+  Smartphone,
+  Lock,
+  AlertTriangle,
+  CheckCircle2,
+} from "lucide-react";
 
-export default function SettingsAccountPage() {
+export default function SettingsTwoFactorPage() {
+  // Mock state - replace with actual data later
+  const isEnabled = false;
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Two Factor Authentication</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <ShieldCheck className="size-5" />
+            Two-Factor Authentication
+          </CardTitle>
           <CardDescription>
-            Add additional security to your account using two factor
-            authentication.
+            Add an extra layer of security to your account by requiring a
+            verification code in addition to your password.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <Badge className="rounded-md py-1 px-2 bg-destructive/10 text-destructive">
-            Disabled
-          </Badge>
-          <p className="text-muted-foreground text-sm">
-            When you enable two-factor authentication, you will be prompted for
-            a secure pin during login. This pin can be retrieved from a
-            TOTP-supported application on your phone.
-          </p>
+        <CardContent className="space-y-6">
+          {/* Status Section */}
+          <div className="flex items-center justify-between rounded-lg border p-4 bg-muted/30">
+            <div className="space-y-0.5">
+              <div className="font-medium">Current Status</div>
+              <div className="text-sm text-muted-foreground">
+                {isEnabled
+                  ? "Your account is secured with 2FA."
+                  : "Two-factor authentication is currently disabled."}
+              </div>
+            </div>
+            {isEnabled ? (
+              <div className="flex items-center gap-1.5 text-sm text-green-600 font-medium px-3 py-1.5 rounded-md bg-green-500/10 border border-green-500/20">
+                <CheckCircle2 className="size-4" />
+                Enabled
+              </div>
+            ) : (
+              <div className="flex items-center gap-1.5 text-sm text-amber-600 font-medium px-3 py-1.5 rounded-md bg-amber-500/10 border border-amber-500/20">
+                <AlertTriangle className="size-4" />
+                Disabled
+              </div>
+            )}
+          </div>
+
+          <Separator />
+
+          {/* Educational Content */}
+          <div className="space-y-4">
+            <h3 className="text-sm font-medium">Why enable 2FA?</h3>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="flex items-start gap-3">
+                <div className="mt-0.5 flex size-8 items-center justify-center rounded-full bg-blue-500/10 text-blue-600">
+                  <Lock className="size-4" />
+                </div>
+                <div className="space-y-1">
+                  <p className="font-medium text-sm">Enhanced Security</p>
+                  <p className="text-xs text-muted-foreground">
+                    {
+                      "Even if someone gets your password, they won't be able to access your account without the second factor."
+                    }
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="mt-0.5 flex size-8 items-center justify-center rounded-full bg-purple-500/10 text-purple-600">
+                  <Smartphone className="size-4" />
+                </div>
+                <div className="space-y-1">
+                  <p className="font-medium text-sm">Easy to Use</p>
+                  <p className="text-xs text-muted-foreground">
+                    Use any authenticator app like Google Authenticator or Authy
+                    to generate secure verification codes.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </CardContent>
         <CardFooter>
-          <Button>
-            <ShieldCheck />
-            Enable 2FA
+          <Button className="w-full sm:w-auto">
+            {isEnabled ? "Manage 2FA" : "Set up 2FA"}
           </Button>
         </CardFooter>
       </Card>
