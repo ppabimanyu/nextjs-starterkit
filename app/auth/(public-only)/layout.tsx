@@ -1,8 +1,8 @@
 import { auth } from "@/lib/auth";
-import { redirect } from "next/navigation";
 import { headers } from "next/headers";
+import { redirect, RedirectType } from "next/navigation";
 
-export default async function AuthLayout({
+export default async function PublicOnlyLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -11,7 +11,7 @@ export default async function AuthLayout({
     headers: await headers(),
   });
   if (session) {
-    return redirect("/dashboard");
+    return redirect("/dashboard", RedirectType.replace);
   }
   return <div>{children}</div>;
 }

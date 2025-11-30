@@ -15,11 +15,14 @@ import { env } from "@/env";
 import { Spinner } from "@/components/ui/spinner";
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
-import SocialAuth from "../_components/social-auth";
+import SocialAuth from "../../_components/social-auth";
 import Link from "next/link";
-import Footer from "../_components/footer";
+import Footer from "../../_components/footer";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import LoadingContent from "@/components/loading-content";
+import Loading from "@/app/loading";
 
 const signInFormSchema = z.object({
   email: z.email("Invalid email"),

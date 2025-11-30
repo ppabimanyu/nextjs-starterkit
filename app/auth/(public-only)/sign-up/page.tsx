@@ -16,12 +16,14 @@ import { useState } from "react";
 import { Spinner } from "@/components/ui/spinner";
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
-import SocialAuth from "../_components/social-auth";
+import SocialAuth from "../../_components/social-auth";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
-import Footer from "../_components/footer";
-import SuccessSignUpPage from "../_components/success-sign-up";
+import Footer from "../../_components/footer";
+import SuccessSignUpPage from "../../_components/success-sign-up";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import Loading from "@/app/loading";
 
 const signUpFormSchema = z
   .object({

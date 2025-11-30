@@ -16,11 +16,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
 import { authClient } from "@/lib/auth-client";
-import { trpc } from "@/lib/trpc/client";
-import { cn } from "@/lib/utils";
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -87,12 +84,16 @@ export default function SettingsProfilePage() {
   });
 
   const deleteAccountMutation = useMutation({
-    mutationFn: async () =>
-      authClient.deleteUser({
+    mutationFn: async () => {
+      const { error } = await authClient.deleteUser({
         callbackURL: "/auth/sign-in",
-      }),
+      });
+      if (error) {
+        throw error;
+      }
+    },
     onError: (error) => {
-      toast.error(`Failed to send verification email, ${error.message}`);
+      toast.error(`Failed to delete account, ${error.message}`);
     },
     onSuccess: () => {
       toast.success(
@@ -100,6 +101,10 @@ export default function SettingsProfilePage() {
       );
     },
   });
+
+  if (isPending) {
+    return <LoadingContent />;
+  }
 
   return (
     <div className="space-y-4">

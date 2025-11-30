@@ -1,6 +1,6 @@
 "use client";
 
-import { GalleryVerticalEnd, ArrowLeft, Mail } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -17,7 +17,7 @@ import { z } from "zod";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
-import SuccessReqResetPasswordPage from "../_components/success-req-reset-password";
+import SuccessReqResetPasswordPage from "../../_components/success-req-reset-password";
 
 const forgotPasswordSchema = z.object({
   email: z.string().email("Invalid email address"),

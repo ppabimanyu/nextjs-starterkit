@@ -45,7 +45,6 @@
 
 - [x] Forgot password page
 - [x] Forgot password email verification
-- [ ] Forgot password resend email verification
 - [x] Reset password page
 - [x] Success reset password page
 - [x] Invalid reset password page
@@ -65,7 +64,7 @@
 #### Security
 
 - [x] Password management
-  - [ ] Update Password
+  - [X] Update Password
 - [ ] Two-factor authentication (2FA)
 - [ ] Session management
   - [ ] Active sessions page

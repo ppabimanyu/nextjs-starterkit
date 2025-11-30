@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
 import { authClient } from "@/lib/auth-client";
 import { useForm } from "@tanstack/react-form";
+import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -54,6 +55,30 @@ export default function SettingsAccountPage() {
     },
   });
 
+  const forgotPasswordMutation = useMutation({
+    mutationFn: async () => {
+      const { data, error: sessionError } = await authClient.getSession();
+      if (sessionError) {
+        throw sessionError;
+      }
+      const { error } = await authClient.requestPasswordReset({
+        email: data?.user?.email || "",
+        redirectTo: "/auth/reset-password",
+      });
+      if (error) {
+        throw error;
+      }
+    },
+    onSuccess: () => {
+      toast.success(
+        "We have sent a password reset link to your email, please check your email."
+      );
+    },
+    onError: (error) => {
+      toast.error(`Failed to send password reset link, ${error.message}`);
+    },
+  });
+
   return (
     <div className="space-y-4">
       <Card>
@@ -67,7 +92,21 @@ export default function SettingsAccountPage() {
           <form.Field name="currentPassword">
             {(field) => (
               <div className="space-y-2">
-                <Label htmlFor="current-password">Current Password</Label>
+                <Label
+                  htmlFor="current-password"
+                  className="flex items-center justify-between"
+                >
+                  Current Password{" "}
+                  <Button
+                    variant={"link"}
+                    className="p-0"
+                    onClick={() => forgotPasswordMutation.mutate()}
+                    disabled={forgotPasswordMutation.isPending}
+                  >
+                    Forgot Password?{" "}
+                    {forgotPasswordMutation.isPending && <Spinner />}
+                  </Button>
+                </Label>
                 <Input
                   id="current-password"
                   type="password"

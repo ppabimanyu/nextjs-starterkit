@@ -6,7 +6,7 @@ import {
 import { AppSidebar } from "./_components/app-sidebar";
 import { env } from "@/env";
 import { auth } from "@/lib/auth";
-import { redirect } from "next/navigation";
+import { redirect, RedirectType } from "next/navigation";
 import { headers } from "next/headers";
 
 export default async function DashboardLayout({
@@ -18,7 +18,7 @@ export default async function DashboardLayout({
     headers: await headers(),
   });
   if (!session) {
-    return redirect("/auth/sign-in");
+    return redirect("/auth/sign-in", RedirectType.replace);
   }
   return (
     <SidebarProvider>
