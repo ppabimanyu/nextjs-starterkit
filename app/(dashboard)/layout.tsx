@@ -18,7 +18,10 @@ export default async function DashboardLayout({
     headers: await headers(),
   });
   if (!session) {
-    return redirect("/auth/sign-in", RedirectType.replace);
+    return redirect(
+      env.NEXT_PUBLIC_DEFAULT_UNAUTHENTICATED_PAGE,
+      RedirectType.replace
+    );
   }
   return (
     <SidebarProvider>

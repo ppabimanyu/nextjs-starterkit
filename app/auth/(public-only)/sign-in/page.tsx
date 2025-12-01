@@ -20,9 +20,8 @@ import Link from "next/link";
 import Footer from "../../_components/footer";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import LoadingContent from "@/components/loading-content";
-import Loading from "@/app/loading";
+import LoadingButton from "@/components/loading-button";
+import Container from "../../_components/container";
 
 const signInFormSchema = z.object({
   email: z.email("Invalid email"),
@@ -48,7 +47,7 @@ export default function SignInPage() {
         callbackURL: "/dashboard",
       });
       if (error) {
-        toast.error(error.message);
+        toast.error(`Failed to sign in, ${error.message}`);
         return;
       }
       toast.success("Sign in successful");
@@ -56,103 +55,97 @@ export default function SignInPage() {
   });
 
   return (
-    <div className="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
-      <div className="w-full max-w-sm">
-        <div className={"flex flex-col gap-6"}>
-          <FieldGroup>
-            <div className="flex flex-col items-center gap-2 text-center">
-              <a
-                href="#"
-                className="flex flex-col items-center gap-2 font-medium"
-              >
-                <div className="flex size-8 items-center justify-center rounded-md">
-                  <GalleryVerticalEnd className="size-6" />
-                </div>
-                <span className="sr-only">{env.NEXT_PUBLIC_APP_NAME}</span>
-              </a>
-              <h1 className="text-xl font-bold capitalize">
-                Welcome to {env.NEXT_PUBLIC_APP_NAME}
-              </h1>
-              <FieldDescription>
-                Sign in or create an account to continue
-              </FieldDescription>
+    <Container>
+      <FieldGroup>
+        <div className="flex flex-col items-center gap-2 text-center">
+          <a href="#" className="flex flex-col items-center gap-2 font-medium">
+            <div className="flex size-8 items-center justify-center rounded-md">
+              <GalleryVerticalEnd className="size-6" />
             </div>
-            <form onSubmit={signInForm.handleSubmit}>
-              <div className="space-y-4">
-                <div className="space-y-4">
-                  <signInForm.Field name="email">
-                    {(field) => (
-                      <Field>
-                        <FieldLabel htmlFor="email">Email</FieldLabel>
-                        <Input
-                          id="email"
-                          type="text"
-                          placeholder="John Doe"
-                          required
-                          value={field.state.value}
-                          onChange={(e) => field.handleChange(e.target.value)}
-                        />
-                        <FieldError>
-                          {field.state.meta.errors[0]?.message}
-                        </FieldError>
-                      </Field>
-                    )}
-                  </signInForm.Field>
-                  <signInForm.Field name="password">
-                    {(field) => (
-                      <Field>
-                        <FieldLabel htmlFor="password">
-                          <span>Password</span>
-                          <Link
-                            href={"/auth/forgot-password"}
-                            className="flex justify-end w-full text-primary hover:underline"
-                          >
-                            Forgot Password?
-                          </Link>
-                        </FieldLabel>
-                        <Input
-                          id="password"
-                          type="password"
-                          required
-                          value={field.state.value}
-                          onChange={(e) => field.handleChange(e.target.value)}
-                        />
-                        <FieldError>
-                          {field.state.meta.errors[0]?.message}
-                        </FieldError>
-                      </Field>
-                    )}
-                  </signInForm.Field>
-                </div>
-                <Field>
-                  <signInForm.Subscribe
-                    selector={(state) => [state.canSubmit, state.isSubmitting]}
-                  >
-                    {([canSubmit, isSubmitting]) => (
-                      <Button
-                        type="button"
-                        onClick={signInForm.handleSubmit}
-                        disabled={!canSubmit || isSubmitting}
-                      >
-                        Sign In {isSubmitting && <Spinner />}
-                      </Button>
-                    )}
-                  </signInForm.Subscribe>
-                  <FieldDescription className="text-center">
-                    Don&apos;t have an account?{" "}
-                    <Link href="/auth/sign-up" className="text-primary">
-                      Sign up
-                    </Link>
-                  </FieldDescription>
-                </Field>
-              </div>
-            </form>
-            <FieldSeparator>Or</FieldSeparator>
-            <SocialAuth />
-          </FieldGroup>
-          <Footer />
+            <span className="sr-only">{env.NEXT_PUBLIC_APP_NAME}</span>
+          </a>
+          <h1 className="text-xl font-bold capitalize">
+            Welcome to {env.NEXT_PUBLIC_APP_NAME}
+          </h1>
+          <FieldDescription>
+            Sign in or create an account to continue
+          </FieldDescription>
         </div>
-      </div>
-    </div>
+        <form onSubmit={signInForm.handleSubmit}>
+          <div className="space-y-4">
+            <div className="space-y-4">
+              <signInForm.Field name="email">
+                {(field) => (
+                  <Field>
+                    <FieldLabel htmlFor="email">Email</FieldLabel>
+                    <Input
+                      id="email"
+                      type="text"
+                      placeholder="John Doe"
+                      required
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                    />
+                    <FieldError>
+                      {field.state.meta.errors[0]?.message}
+                    </FieldError>
+                  </Field>
+                )}
+              </signInForm.Field>
+              <signInForm.Field name="password">
+                {(field) => (
+                  <Field>
+                    <FieldLabel htmlFor="password">
+                      <span>Password</span>
+                      <Link
+                        href={"/auth/forgot-password"}
+                        className="flex justify-end w-full text-primary hover:underline"
+                      >
+                        Forgot Password?
+                      </Link>
+                    </FieldLabel>
+                    <Input
+                      id="password"
+                      type="password"
+                      required
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                    />
+                    <FieldError>
+                      {field.state.meta.errors[0]?.message}
+                    </FieldError>
+                  </Field>
+                )}
+              </signInForm.Field>
+            </div>
+            <Field>
+              <signInForm.Subscribe
+                selector={(state) => [state.canSubmit, state.isSubmitting]}
+              >
+                {([canSubmit, isSubmitting]) => (
+                  <LoadingButton
+                    type="button"
+                    onClick={signInForm.handleSubmit}
+                    disabled={!canSubmit}
+                    isLoading={isSubmitting}
+                  >
+                    Sign In
+                  </LoadingButton>
+                )}
+              </signInForm.Subscribe>
+              <FieldDescription className="text-center">
+                Don&apos;t have an account?{" "}
+                <Link href="/auth/sign-up" className="text-primary">
+                  Sign up
+                </Link>
+              </FieldDescription>
+            </Field>
+          </div>
+        </form>
+        <FieldSeparator>Or</FieldSeparator>
+        <SocialAuth />
+      </FieldGroup>
+      <Footer />
+    </Container>
   );
 }

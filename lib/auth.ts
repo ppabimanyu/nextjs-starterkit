@@ -13,7 +13,7 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     autoSignIn: true,
-    requireEmailVerification: true,
+    requireEmailVerification: env.AUTH_REQUIRED_EMAIL_VERIFICATION,
     sendResetPassword: async ({ user, url }) => {
       await sendEmail({
         to: user.email,
@@ -56,12 +56,12 @@ export const auth = betterAuth({
   },
   socialProviders: {
     github: {
-      clientId: env.BETTER_AUTH_GITHUB_CLIENT_ID || "",
-      clientSecret: env.BETTER_AUTH_GITHUB_CLIENT_SECRET || "",
+      clientId: env.AUTH_GITHUB_CLIENT_ID || "",
+      clientSecret: env.AUTH_GITHUB_CLIENT_SECRET || "",
     },
     google: {
-      clientId: env.BETTER_AUTH_GOOGLE_CLIENT_ID || "",
-      clientSecret: env.BETTER_AUTH_GOOGLE_CLIENT_SECRET || "",
+      clientId: env.AUTH_GOOGLE_CLIENT_ID || "",
+      clientSecret: env.AUTH_GOOGLE_CLIENT_SECRET || "",
     },
   },
   plugins: [twoFactor()],

@@ -1,3 +1,4 @@
+import { env } from "@/env";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect, RedirectType } from "next/navigation";
@@ -11,7 +12,10 @@ export default async function PublicOnlyLayout({
     headers: await headers(),
   });
   if (session) {
-    return redirect("/dashboard", RedirectType.replace);
+    return redirect(
+      env.NEXT_PUBLIC_DEFAULT_AUTHENTICATED_PAGE,
+      RedirectType.replace
+    );
   }
   return <div>{children}</div>;
 }

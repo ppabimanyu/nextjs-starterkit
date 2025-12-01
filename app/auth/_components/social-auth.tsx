@@ -1,25 +1,44 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import LoadingButton from "@/components/loading-button";
 import { Field } from "@/components/ui/field";
 import { env } from "@/env";
-import { authClient } from "@/lib/auth-client";
+import { authClient, Provider } from "@/lib/auth-client";
+import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export default function SocialAuth() {
-  const handlerSocialAuth = async (provider: "google" | "github") => {
-    await authClient.signIn.social({
-      provider,
-      callbackURL: "/dashboard",
-    });
+  const [provider, setProvider] = useState<Provider>("");
+
+  const socialAuthMutation = useMutation({
+    mutationFn: async (provider: Provider) => {
+      await authClient.signIn.social({
+        provider,
+        callbackURL: env.NEXT_PUBLIC_DEFAULT_AUTHENTICATED_PAGE,
+      });
+    },
+    onError: (error) => {
+      toast.error(`Failed to sign in, ${error.message}`);
+    },
+  });
+
+  const handleSocialAuth = (provider: Provider) => {
+    setProvider(provider);
+    socialAuthMutation.mutate(provider);
   };
 
   return (
     <Field className="grid gap-4">
-      {env.NEXT_PUBLIC_ENABLE_GOOGLE_AUTH && (
-        <Button
+      {env.NEXT_PUBLIC_AUTH_ENABLE_GOOGLE && (
+        <LoadingButton
           variant="outline"
           type="button"
-          onClick={() => handlerSocialAuth("google")}
+          onClick={() => {
+            handleSocialAuth("google");
+          }}
+          disabled={socialAuthMutation.isPending}
+          isLoading={socialAuthMutation.isPending && provider === "google"}
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <path
@@ -28,13 +47,15 @@ export default function SocialAuth() {
             />
           </svg>
           Continue with Google
-        </Button>
+        </LoadingButton>
       )}
-      {env.NEXT_PUBLIC_ENABLE_GITHUB_AUTH && (
-        <Button
+      {env.NEXT_PUBLIC_AUTH_ENABLE_GITHUB && (
+        <LoadingButton
           variant="outline"
           type="button"
-          onClick={() => handlerSocialAuth("github")}
+          onClick={() => handleSocialAuth("github")}
+          disabled={socialAuthMutation.isPending}
+          isLoading={socialAuthMutation.isPending && provider === "github"}
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <path
@@ -43,7 +64,7 @@ export default function SocialAuth() {
             />
           </svg>
           Continue with GitHub
-        </Button>
+        </LoadingButton>
       )}
     </Field>
   );

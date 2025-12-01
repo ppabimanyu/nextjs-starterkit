@@ -22,14 +22,17 @@ import { z } from "zod";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User, Mail, Trash2, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { useState } from "react";
+import ConfirmPasswordDialog from "@/components/confirm-password-dialog";
 
 export default function SettingsProfilePage() {
+  // Get session data
   const { data, error, isPending } = authClient.useSession();
-
   if (error) {
     toast.error("Failed to get session data");
   }
 
+  // Update profile form
   const profileForm = useForm({
     defaultValues: {
       name: data?.user.name || "",
@@ -55,6 +58,7 @@ export default function SettingsProfilePage() {
     },
   });
 
+  // Change email form
   const emailForm = useForm({
     defaultValues: {
       email: "",
@@ -86,9 +90,14 @@ export default function SettingsProfilePage() {
     },
   });
 
+  // Delete account
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deletePassword, setDeletePassword] = useState("");
+
   const deleteAccountMutation = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (password: string) => {
       const { error } = await authClient.deleteUser({
+        password,
         callbackURL: "/auth/sign-in",
       });
       if (error) {
@@ -103,12 +112,18 @@ export default function SettingsProfilePage() {
         "We have sent a verification email to your email address, please check your inbox to verify your account deletion."
       );
     },
+    onSettled: () => {
+      setDeletePassword("");
+      setDeleteDialogOpen(false);
+    },
   });
 
+  // Loading state
   if (isPending) {
     return <LoadingContent />;
   }
 
+  // Get user initials
   const userInitials = data?.user.name
     ? data.user.name
         .split(" ")
@@ -288,13 +303,25 @@ export default function SettingsProfilePage() {
           </div>
         </CardContent>
         <CardFooter>
-          <Button
-            variant="destructive"
-            onClick={() => deleteAccountMutation.mutate()}
-            disabled={deleteAccountMutation.isPending}
+          <ConfirmPasswordDialog
+            open={deleteDialogOpen}
+            onOpenChange={(open) => {
+              setDeleteDialogOpen(open);
+              if (!open) setDeletePassword("");
+            }}
+            password={deletePassword}
+            setPassword={setDeletePassword}
+            action={() => deleteAccountMutation.mutate(deletePassword)}
+            actionDisabled={!deletePassword || deleteAccountMutation.isPending}
+            actionPending={deleteAccountMutation.isPending}
           >
-            Delete Account {deleteAccountMutation.isPending && <Spinner />}
-          </Button>
+            <Button
+              variant="destructive"
+              disabled={deleteAccountMutation.isPending}
+            >
+              Delete Account {deleteAccountMutation.isPending && <Spinner />}
+            </Button>
+          </ConfirmPasswordDialog>
         </CardFooter>
       </Card>
     </div>

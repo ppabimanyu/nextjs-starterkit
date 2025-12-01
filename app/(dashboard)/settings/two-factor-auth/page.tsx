@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import LoadingContent from "@/components/loading-content";
 import {
   Card,
   CardContent,
@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { authClient } from "@/lib/auth-client";
 import {
   ShieldCheck,
   Smartphone,
@@ -17,10 +18,20 @@ import {
   AlertTriangle,
   CheckCircle2,
 } from "lucide-react";
+import { toast } from "sonner";
+import { EnableTwoFactorDialog } from "./_components/enable-2fa-dialog";
+import { DisableTwoFactorAuth } from "./_components/disable-2fa-dialog";
+import { TwoFactorBackupCodes } from "./_components/2fa-backup-codes";
 
 export default function SettingsTwoFactorPage() {
-  // Mock state - replace with actual data later
-  const isEnabled = false;
+  const session = authClient.useSession();
+  if (session.error) {
+    toast.error(`Failed to get session, ${session.error.message}`);
+  }
+
+  if (session.isPending) {
+    return <LoadingContent />;
+  }
 
   return (
     <div className="space-y-6">
@@ -41,12 +52,12 @@ export default function SettingsTwoFactorPage() {
             <div className="space-y-0.5">
               <div className="font-medium">Current Status</div>
               <div className="text-sm text-muted-foreground">
-                {isEnabled
+                {session?.data?.user?.twoFactorEnabled
                   ? "Your account is secured with 2FA."
                   : "Two-factor authentication is currently disabled."}
               </div>
             </div>
-            {isEnabled ? (
+            {session?.data?.user?.twoFactorEnabled ? (
               <div className="flex items-center gap-1.5 text-sm text-green-600 font-medium px-3 py-1.5 rounded-md bg-green-500/10 border border-green-500/20">
                 <CheckCircle2 className="size-4" />
                 Enabled
@@ -62,41 +73,47 @@ export default function SettingsTwoFactorPage() {
           <Separator />
 
           {/* Educational Content */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-medium">Why enable 2FA?</h3>
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="flex items-start gap-3">
-                <div className="mt-0.5 flex size-8 items-center justify-center rounded-full bg-blue-500/10 text-blue-600">
-                  <Lock className="size-4" />
+          {session?.data?.user?.twoFactorEnabled ? (
+            <TwoFactorBackupCodes />
+          ) : (
+            <div className="space-y-4">
+              <h3 className="text-sm font-medium">Why enable 2FA?</h3>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="flex items-start gap-3">
+                  <div className="mt-0.5 flex size-8 items-center justify-center rounded-full bg-blue-500/10 text-blue-600">
+                    <Lock className="size-4" />
+                  </div>
+                  <div className="space-y-1">
+                    <p className="font-medium text-sm">Enhanced Security</p>
+                    <p className="text-xs text-muted-foreground">
+                      {
+                        "Even if someone gets your password, they won't be able to access your account without the second factor."
+                      }
+                    </p>
+                  </div>
                 </div>
-                <div className="space-y-1">
-                  <p className="font-medium text-sm">Enhanced Security</p>
-                  <p className="text-xs text-muted-foreground">
-                    {
-                      "Even if someone gets your password, they won't be able to access your account without the second factor."
-                    }
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="mt-0.5 flex size-8 items-center justify-center rounded-full bg-purple-500/10 text-purple-600">
-                  <Smartphone className="size-4" />
-                </div>
-                <div className="space-y-1">
-                  <p className="font-medium text-sm">Easy to Use</p>
-                  <p className="text-xs text-muted-foreground">
-                    Use any authenticator app like Google Authenticator or Authy
-                    to generate secure verification codes.
-                  </p>
+                <div className="flex items-start gap-3">
+                  <div className="mt-0.5 flex size-8 items-center justify-center rounded-full bg-purple-500/10 text-purple-600">
+                    <Smartphone className="size-4" />
+                  </div>
+                  <div className="space-y-1">
+                    <p className="font-medium text-sm">Easy to Use</p>
+                    <p className="text-xs text-muted-foreground">
+                      Use any authenticator app like Google Authenticator or
+                      Authy to generate secure verification codes.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </CardContent>
         <CardFooter>
-          <Button className="w-full sm:w-auto">
-            {isEnabled ? "Manage 2FA" : "Set up 2FA"}
-          </Button>
+          {session?.data?.user?.twoFactorEnabled ? (
+            <DisableTwoFactorAuth />
+          ) : (
+            <EnableTwoFactorDialog />
+          )}
         </CardFooter>
       </Card>
     </div>
