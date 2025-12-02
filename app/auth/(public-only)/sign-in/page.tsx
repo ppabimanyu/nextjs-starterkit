@@ -1,7 +1,6 @@
 "use client";
 
 import { GalleryVerticalEnd } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
   Field,
   FieldDescription,
@@ -12,7 +11,6 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { env } from "@/env";
-import { Spinner } from "@/components/ui/spinner";
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
 import SocialAuth from "../../_components/social-auth";
@@ -22,6 +20,8 @@ import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 import LoadingButton from "@/components/loading-button";
 import Container from "../../_components/container";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 const signInFormSchema = z.object({
   email: z.email("Invalid email"),
@@ -114,6 +114,22 @@ export default function SignInPage() {
                     <FieldError>
                       {field.state.meta.errors[0]?.message}
                     </FieldError>
+                  </Field>
+                )}
+              </signInForm.Field>
+              <signInForm.Field name="rememberMe">
+                {(field) => (
+                  <Field>
+                    <div className="flex items-center gap-3">
+                      <Checkbox
+                        id="rememberMe"
+                        checked={field.state.value}
+                        onCheckedChange={(checked) =>
+                          field.handleChange(!!checked)
+                        }
+                      />
+                      <Label htmlFor="rememberMe">Remember me</Label>
+                    </div>
                   </Field>
                 )}
               </signInForm.Field>

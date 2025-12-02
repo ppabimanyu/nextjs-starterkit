@@ -98,7 +98,7 @@ export default function SettingsAccountPage() {
           {/* Current Password */}
           <form.Field name="currentPassword">
             {(field) => (
-              <div className="space-y-2 max-w-md">
+              <div className="space-y-2">
                 <Label
                   htmlFor="current-password"
                   className="flex items-center justify-between"
@@ -139,7 +139,7 @@ export default function SettingsAccountPage() {
             {/* New Password */}
             <form.Field name="newPassword">
               {(field) => (
-                <div className="space-y-2 max-w-md">
+                <div className="space-y-2">
                   <Label htmlFor="new-password">New Password</Label>
                   <PasswordInput
                     id="new-password"
@@ -157,7 +157,7 @@ export default function SettingsAccountPage() {
             {/* Confirm Password */}
             <form.Field name="confirmPassword">
               {(field) => (
-                <div className="space-y-2 max-w-md">
+                <div className="space-y-2">
                   <Label htmlFor="confirm-password">Confirm New Password</Label>
                   <PasswordInput
                     id="confirm-password"

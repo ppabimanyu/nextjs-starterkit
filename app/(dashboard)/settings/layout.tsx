@@ -55,7 +55,7 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
   const pathname = usePathname();
 
   return (
-    <div className="flex flex-col h-full max-w-6xl w-full">
+    <div className="flex flex-col h-full w-full">
       <div className="space-y-0.5">
         <h2 className="text-2xl font-bold tracking-tight">Settings</h2>
         <p className="text-muted-foreground">
@@ -87,7 +87,7 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
             )}
           </nav>
         </aside>
-        <div className="flex-1 lg:max-w-2xl">{children}</div>
+        <div className="flex-1 w-full max-w-3xl mx-auto ">{children}</div>
       </div>
     </div>
   );

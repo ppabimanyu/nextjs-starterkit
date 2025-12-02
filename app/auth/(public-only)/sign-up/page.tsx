@@ -66,7 +66,7 @@ export default function SignUpPage() {
     },
   });
 
-  if (!successSignUp) {
+  if (successSignUp) {
     return <SuccessSignUpPage />;
   }
 

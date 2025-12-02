@@ -13,6 +13,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import { NavSecondary } from "./nav-secondary";
 
 // This is sample data.
 const data = {
@@ -43,6 +44,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain />
+        <NavSecondary />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />

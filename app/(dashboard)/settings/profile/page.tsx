@@ -170,7 +170,7 @@ export default function SettingsProfilePage() {
           <Separator />
           <profileForm.Field name="name">
             {(field) => (
-              <div className="space-y-2 max-w-md">
+              <div className="space-y-2">
                 <Label htmlFor="name">Display Name</Label>
                 <Input
                   id="name"
@@ -215,7 +215,7 @@ export default function SettingsProfilePage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="space-y-2 max-w-md">
+          <div className="space-y-2 ">
             <Label htmlFor="current-email">Current Email</Label>
             <div className="flex items-center gap-2">
               <Input
@@ -242,7 +242,7 @@ export default function SettingsProfilePage() {
 
           <emailForm.Field name="email">
             {(field) => (
-              <div className="space-y-2 max-w-md">
+              <div className="space-y-2 ">
                 <Label htmlFor="new-email">New Email Address</Label>
                 <Input
                   id="new-email"

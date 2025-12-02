@@ -7,6 +7,7 @@ export async function sendEmail({
   subject: string;
   text: string;
 }) {
+  // TODO: Implement email sender
   console.log(
     "Sending email to",
     to,
