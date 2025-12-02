@@ -16,8 +16,15 @@ import { useMutation } from "@tanstack/react-query";
 import { LockKeyhole, ShieldAlert } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { FieldGroup } from "@/components/ui/field";
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import LoadingButton from "@/components/loading-button";
+import { PasswordInput } from "@/components/password-input";
 
 export function DisableTwoFactorAuth() {
   const [open, setOpen] = useState(false);
@@ -62,29 +69,33 @@ export function DisableTwoFactorAuth() {
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="text-center flex flex-col items-center gap-4">
-            <LockKeyhole size={32} />
+            <LockKeyhole className="size-5" />
             Disable Two-actor Authentication
           </DialogTitle>
           <DialogDescription className="text-center">
             Are you sure you want to disable two-factor authentication?
           </DialogDescription>
         </DialogHeader>
-        <FieldGroup>
-          <Input
-            type="password"
+        <Field>
+          <FieldLabel htmlFor="password">Password</FieldLabel>
+          <PasswordInput
+            id="password"
+            required
             placeholder="Enter your password"
             value={twoFactorPassword}
             onChange={(e) => setTwoFactorPassword(e.target.value)}
           />
-        </FieldGroup>
+          <FieldDescription>Enter your password to confirm.</FieldDescription>
+        </Field>
         <DialogFooter>
-          <Button
+          <LoadingButton
             className="w-full"
             onClick={() => disableTwoFactorMutation.mutate(twoFactorPassword)}
-            disabled={disableTwoFactorMutation.isPending || !twoFactorPassword}
+            disabled={!twoFactorPassword}
+            isLoading={disableTwoFactorMutation.isPending}
           >
-            Confirm {disableTwoFactorMutation.isPending && <Spinner />}
-          </Button>
+            Confirm
+          </LoadingButton>
         </DialogFooter>
       </DialogContent>
     </Dialog>

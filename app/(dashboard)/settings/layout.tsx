@@ -56,9 +56,9 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
 
   return (
     <div className="flex flex-col h-full w-full">
-      <div className="space-y-0.5">
-        <h2 className="text-2xl font-bold tracking-tight">Settings</h2>
-        <p className="text-muted-foreground">
+      <div className="space-y-1">
+        <h2 className="text-lg font-medium">Settings</h2>
+        <p className="text-sm text-muted-foreground">
           Manage your account settings and security preferences.
         </p>
       </div>

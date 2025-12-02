@@ -41,8 +41,8 @@ export default function SettingsAppearancePage() {
                 className={cn(theme === "light" && "bg-background rounded-sm")}
               >
                 <RadioGroupItem value="light" className="sr-only" />
-                <div className="flex items-center justify-center gap-1 w-full py-2">
-                  <Sun size={16} />
+                <div className="flex items-center justify-center gap-1 w-full py-2 text-xs">
+                  <Sun className="size-4" />
                   Light
                 </div>
               </Label>
@@ -52,8 +52,8 @@ export default function SettingsAppearancePage() {
                 className={cn(theme === "dark" && "bg-background rounded-sm")}
               >
                 <RadioGroupItem value="dark" className="sr-only" />
-                <span className="flex items-center justify-center gap-1 w-full py-2">
-                  <Moon size={16} />
+                <span className="flex items-center justify-center gap-1 w-full py-2 text-xs">
+                  <Moon className="size-4" />
                   Dark
                 </span>
               </Label>
@@ -63,8 +63,8 @@ export default function SettingsAppearancePage() {
                 className={cn(theme === "system" && "bg-background rounded-sm")}
               >
                 <RadioGroupItem value="system" className="sr-only" />
-                <span className="flex items-center justify-center gap-1 w-full py-2">
-                  <Monitor size={16} />
+                <span className="flex items-center justify-center gap-1 w-full py-2 text-xs">
+                  <Monitor className="size-4" />
                   System
                 </span>
               </Label>

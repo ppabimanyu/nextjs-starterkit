@@ -9,8 +9,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { FieldError } from "@/components/ui/field";
-import { Label } from "@/components/ui/label";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
 import { authClient } from "@/lib/auth-client";
 import { useForm } from "@tanstack/react-form";
@@ -20,6 +24,7 @@ import { z } from "zod";
 import { ShieldCheck, KeyRound } from "lucide-react";
 import { PasswordInput } from "@/components/password-input";
 import { Separator } from "@/components/ui/separator";
+import LoadingButton from "@/components/loading-button";
 
 export default function SettingsAccountPage() {
   const form = useForm({
@@ -98,8 +103,8 @@ export default function SettingsAccountPage() {
           {/* Current Password */}
           <form.Field name="currentPassword">
             {(field) => (
-              <div className="space-y-2">
-                <Label
+              <Field>
+                <FieldLabel
                   htmlFor="current-password"
                   className="flex items-center justify-between"
                 >
@@ -115,7 +120,7 @@ export default function SettingsAccountPage() {
                       <Spinner className="ml-1 size-3" />
                     )}
                   </Button>
-                </Label>
+                </FieldLabel>
                 <PasswordInput
                   id="current-password"
                   required
@@ -123,8 +128,11 @@ export default function SettingsAccountPage() {
                   onChange={(e) => field.handleChange(e.target.value)}
                   placeholder="Enter current password"
                 />
+                <FieldDescription>
+                  Enter your current password to confirm the change.
+                </FieldDescription>
                 <FieldError>{field.state.meta.errors[0]?.message}</FieldError>
-              </div>
+              </Field>
             )}
           </form.Field>
 
@@ -139,8 +147,8 @@ export default function SettingsAccountPage() {
             {/* New Password */}
             <form.Field name="newPassword">
               {(field) => (
-                <div className="space-y-2">
-                  <Label htmlFor="new-password">New Password</Label>
+                <Field>
+                  <FieldLabel htmlFor="new-password">New Password</FieldLabel>
                   <PasswordInput
                     id="new-password"
                     value={field.state.value}
@@ -149,24 +157,33 @@ export default function SettingsAccountPage() {
                     showRequirements
                     placeholder="Enter new password"
                   />
+                  <FieldDescription>
+                    Your password must be at least 8 characters long and contain
+                    a mix of uppercase, lowercase, numbers, and symbols.
+                  </FieldDescription>
                   <FieldError>{field.state.meta.errors[0]?.message}</FieldError>
-                </div>
+                </Field>
               )}
             </form.Field>
 
             {/* Confirm Password */}
             <form.Field name="confirmPassword">
               {(field) => (
-                <div className="space-y-2">
-                  <Label htmlFor="confirm-password">Confirm New Password</Label>
+                <Field>
+                  <FieldLabel htmlFor="confirm-password">
+                    Confirm New Password
+                  </FieldLabel>
                   <PasswordInput
                     id="confirm-password"
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
                     placeholder="Confirm new password"
                   />
+                  <FieldDescription>
+                    Please enter the same password as above.
+                  </FieldDescription>
                   <FieldError>{field.state.meta.errors[0]?.message}</FieldError>
-                </div>
+                </Field>
               )}
             </form.Field>
           </div>
@@ -176,13 +193,14 @@ export default function SettingsAccountPage() {
             selector={(state) => [state.canSubmit, state.isSubmitting]}
           >
             {([canSubmit, isSubmitting]) => (
-              <Button
+              <LoadingButton
                 type="button"
-                disabled={!canSubmit || isSubmitting}
+                disabled={!canSubmit}
+                isLoading={isSubmitting}
                 onClick={() => form.handleSubmit()}
               >
-                Update Password {isSubmitting && <Spinner />}
-              </Button>
+                Update Password
+              </LoadingButton>
             )}
           </form.Subscribe>
         </CardFooter>

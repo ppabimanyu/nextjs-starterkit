@@ -20,7 +20,13 @@ import { LockKeyhole, Copy, QrCode, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import QRCode from "react-qr-code";
-import { FieldGroup, FieldSeparator } from "@/components/ui/field";
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+  FieldSeparator,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { ButtonGroup } from "@/components/ui/button-group";
 import {
@@ -29,6 +35,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
+import LoadingButton from "@/components/loading-button";
 
 export function EnableTwoFactorDialog() {
   const [open, setOpen] = useState(false);
@@ -97,8 +104,8 @@ export function EnableTwoFactorDialog() {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button className="w-full sm:w-auto">
-          <ShieldCheck />
+        <Button className="flex gap-1">
+          <ShieldCheck className="size-5" />
           Enable 2FA
         </Button>
       </DialogTrigger>
@@ -107,35 +114,37 @@ export function EnableTwoFactorDialog() {
           <>
             <DialogHeader>
               <DialogTitle className="text-center flex flex-col items-center gap-4">
-                <LockKeyhole size={32} />
+                <LockKeyhole className="size-5" />
                 Confirm Password
               </DialogTitle>
               <DialogDescription className="text-center">
                 Please enter your password to enable two-factor authentication.
               </DialogDescription>
             </DialogHeader>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+            <Field>
+              <FieldLabel htmlFor="password">Password</FieldLabel>
               <PasswordInput
                 id="password"
                 required
+                placeholder="Enter your password"
                 value={twoFactorPassword}
                 onChange={(e) => setTwoFactorPassword(e.target.value)}
-                placeholder="Enter your password"
               />
-            </div>
+              <FieldDescription>
+                Enter your password to enable two-factor authentication.
+              </FieldDescription>
+            </Field>
             <DialogFooter>
-              <Button
+              <LoadingButton
                 className="w-full"
                 onClick={() =>
                   enableTwoFactorMutation.mutate(twoFactorPassword)
                 }
-                disabled={
-                  enableTwoFactorMutation.isPending || !twoFactorPassword
-                }
+                disabled={!twoFactorPassword}
+                isLoading={enableTwoFactorMutation.isPending}
               >
-                Confirm {enableTwoFactorMutation.isPending && <Spinner />}
-              </Button>
+                Confirm
+              </LoadingButton>
             </DialogFooter>
           </>
         )}

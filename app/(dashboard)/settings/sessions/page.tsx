@@ -104,15 +104,15 @@ export default function SessionsPage() {
   return (
     <div className="space-y-4">
       {/* Security Notice */}
-      <Card className="border-blue-500/20 bg-blue-500/5 shadow-none">
+      <Card className="border-blue-500/20 bg-blue-500/5">
         <CardHeader>
-          <CardTitle className="text-sm flex items-center gap-2 text-blue-600 dark:text-blue-400">
-            <Shield className="size-4" />
+          <CardTitle className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
+            <Shield className="size-5" />
             Security Notice
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">
+        <CardContent className="-mt-4">
+          <p className="text-xs text-muted-foreground">
             If you notice any suspicious activity or unrecognized sessions,
             revoke them immediately and{" "}
             <Button
@@ -138,7 +138,7 @@ export default function SessionsPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-6">
+          <div className="space-y-5">
             {listSessionsQuery.data?.map((session, index) => {
               const isCurrent = session.id === currentSession?.data?.session.id;
               const parser = new UAParser(session.userAgent || "");
@@ -148,7 +148,7 @@ export default function SessionsPage() {
 
               return (
                 <div key={session.id}>
-                  {index > 0 && <Separator className="my-6" />}
+                  {index > 0 && <Separator className="my-5" />}
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex items-start gap-4">
                       <div className="mt-1 flex size-10 items-center justify-center rounded-full bg-muted">
@@ -156,10 +156,10 @@ export default function SessionsPage() {
                       </div>
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
-                          <h3 className="font-medium leading-none">
+                          <h5 className="font-medium leading-none text-sm">
                             {browser.name || "Unknown Browser"} on{" "}
                             {os.name || "Unknown OS"}
-                          </h3>
+                          </h5>
                           {isCurrent && (
                             <Badge
                               variant="secondary"
@@ -169,7 +169,7 @@ export default function SessionsPage() {
                             </Badge>
                           )}
                         </div>
-                        <div className="space-y-1 text-sm text-muted-foreground">
+                        <div className="space-y-1 text-xs text-muted-foreground">
                           <div className="flex items-center gap-2">
                             <Globe className="size-3.5" />
                             <span>

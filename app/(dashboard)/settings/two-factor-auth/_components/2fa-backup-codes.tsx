@@ -27,6 +27,8 @@ import { Lock, LockKeyhole, Eye, EyeClosed, RefreshCcw } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc/client";
+import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
+import LoadingButton from "@/components/loading-button";
 
 export function TwoFactorBackupCodes() {
   const [open, setOpen] = useState(false);
@@ -71,7 +73,7 @@ export function TwoFactorBackupCodes() {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Lock size={20} /> 2FA Backup Codes
+          <Lock className="size-5" /> 2FA Backup Codes
         </CardTitle>
         <CardDescription>
           Backup codes are used to access your account if you lose access to
@@ -83,20 +85,20 @@ export function TwoFactorBackupCodes() {
           <div className="space-y-4">
             <div className="flex flex-wrap items-center gap-2 justify-between">
               <Button onClick={() => setViewBackupCodes(false)}>
-                <EyeClosed />
+                <EyeClosed className="size-4" />
                 <span>Hide Backup Codes</span>
               </Button>
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
                   <Button variant="outline">
-                    <RefreshCcw />
+                    <RefreshCcw className="size-4" />
                     <span>Regenerate Codes</span>
                   </Button>
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
                     <DialogTitle className="text-center flex flex-col items-center gap-4">
-                      <LockKeyhole size={32} />
+                      <LockKeyhole className="size-5" />
                       Confirm Password
                     </DialogTitle>
                     <DialogDescription className="text-center">
@@ -104,8 +106,8 @@ export function TwoFactorBackupCodes() {
                       authentication.
                     </DialogDescription>
                   </DialogHeader>
-                  <div className="space-y-2">
-                    <Label htmlFor="password">Password</Label>
+                  <Field>
+                    <FieldLabel htmlFor="password">Password</FieldLabel>
                     <PasswordInput
                       id="password"
                       required
@@ -113,25 +115,25 @@ export function TwoFactorBackupCodes() {
                       onChange={(e) => setTwoFactorPassword(e.target.value)}
                       placeholder="Enter your password"
                     />
-                  </div>
+                    <FieldDescription>
+                      Enter your password to confirm.
+                    </FieldDescription>
+                  </Field>
                   <DialogFooter>
-                    <Button
+                    <LoadingButton
                       className="w-full"
                       onClick={() =>
                         regenerateTwoFactorBackupCodesMutation.mutate(
                           twoFactorPassword
                         )
                       }
-                      disabled={
-                        regenerateTwoFactorBackupCodesMutation.isPending ||
-                        !twoFactorPassword
+                      disabled={!twoFactorPassword}
+                      isLoading={
+                        regenerateTwoFactorBackupCodesMutation.isPending
                       }
                     >
-                      Confirm{" "}
-                      {regenerateTwoFactorBackupCodesMutation.isPending && (
-                        <Spinner />
-                      )}
-                    </Button>
+                      Confirm
+                    </LoadingButton>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
@@ -139,11 +141,13 @@ export function TwoFactorBackupCodes() {
             <div className="space-y-2 bg-muted p-4 rounded-md">
               {listTwoFactorBackupCodesQuery.data?.backupCodes?.map(
                 (code, index) => (
-                  <div key={index}>{code}</div>
+                  <div className="text-sm" key={index}>
+                    {code}
+                  </div>
                 )
               )}
             </div>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-xs text-muted-foreground">
               Each backup code can be used once to access your account and will
               be removed after use. If you need more backup codes, you can
               generate new ones.

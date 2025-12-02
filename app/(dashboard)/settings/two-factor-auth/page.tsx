@@ -50,20 +50,20 @@ export default function SettingsTwoFactorPage() {
           {/* Status Section */}
           <div className="flex items-center justify-between rounded-lg border p-4 bg-muted/30">
             <div className="space-y-0.5">
-              <div className="font-medium">Current Status</div>
-              <div className="text-sm text-muted-foreground">
+              <div className="font-medium text-sm">Current Status</div>
+              <div className="text-xs text-muted-foreground">
                 {session?.data?.user?.twoFactorEnabled
                   ? "Your account is secured with 2FA."
                   : "Two-factor authentication is currently disabled."}
               </div>
             </div>
             {session?.data?.user?.twoFactorEnabled ? (
-              <div className="flex items-center gap-1.5 text-sm text-green-600 font-medium px-3 py-1.5 rounded-md bg-green-500/10 border border-green-500/20">
+              <div className="flex items-center gap-1.5 text-xs text-green-600 font-medium px-3 py-1.5 rounded-md bg-green-500/10 border border-green-500/20">
                 <CheckCircle2 className="size-4" />
                 Enabled
               </div>
             ) : (
-              <div className="flex items-center gap-1.5 text-sm text-amber-600 font-medium px-3 py-1.5 rounded-md bg-amber-500/10 border border-amber-500/20">
+              <div className="flex items-center gap-1.5 text-xs text-amber-600 font-medium px-3 py-1.5 rounded-md bg-amber-500/10 border border-amber-500/20">
                 <AlertTriangle className="size-4" />
                 Disabled
               </div>
