@@ -175,7 +175,7 @@ export default function SettingsProfilePage() {
     : "U";
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-8">
       <Section>
         <SectionHeader>
           <SectionTitle className="flex items-center gap-2">
@@ -320,8 +320,11 @@ export default function SettingsProfilePage() {
             <SectionItemHeader>
               <SectionItemTitle>
                 Delete Account{" "}
-                <Badge variant={"outline"} className="border-destructive/20 ">
-                  <AlertTriangle className="text-destructive" />
+                <Badge
+                  variant={"outline"}
+                  className="border-destructive/50 text-destructive/80"
+                >
+                  <AlertTriangle />
                   Warning: This action is irreversible
                 </Badge>
               </SectionItemTitle>

@@ -116,7 +116,7 @@ export default function SettingsSessionsPage() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <Section>
         <SectionHeader>
           <SectionTitle className="flex items-center gap-2">

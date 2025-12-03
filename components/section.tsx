@@ -6,7 +6,7 @@ export function Section({
   ...props
 }: React.PropsWithChildren & React.ComponentProps<"div">) {
   return (
-    <div className={cn("space-y-2", className)} {...props}>
+    <div className={cn("space-y-4", className)} {...props}>
       {children}
     </div>
   );
@@ -18,7 +18,7 @@ export function SectionHeader({
   ...props
 }: React.PropsWithChildren & React.ComponentProps<"div">) {
   return (
-    <div className={cn("space-y-1", className)} {...props}>
+    <div className={cn("space-y-2", className)} {...props}>
       {children}
     </div>
   );
@@ -55,7 +55,7 @@ export function SectionContent({
 }: React.PropsWithChildren & React.ComponentProps<"div">) {
   return (
     <div
-      className={cn("space-y-2 p-4 border rounded-lg bg-card", className)}
+      className={cn("space-y-4 p-4 border rounded-lg bg-card", className)}
       {...props}
     >
       {children}
@@ -70,7 +70,10 @@ export function SectionItem({
 }: React.PropsWithChildren & React.ComponentProps<"div">) {
   return (
     <div
-      className={cn("md:flex items-center gap-2 justify-between", className)}
+      className={cn(
+        "flex flex-col md:flex-row md:items-center gap-2 justify-between",
+        className
+      )}
       {...props}
     >
       {children}
@@ -121,7 +124,7 @@ export function SectionItemContent({
 }: React.PropsWithChildren & React.ComponentProps<"div">) {
   return (
     <div
-      className={cn("space-y-2 flex-2/5 flex flex-col items-end", className)}
+      className={cn("space-y-2 flex-2/5 flex flex-col md:items-end", className)}
       {...props}
     >
       {children}

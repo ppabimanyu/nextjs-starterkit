@@ -19,8 +19,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Spinner } from "@/components/ui/spinner";
 import { authClient } from "@/lib/auth-client";
 import { useMutation } from "@tanstack/react-query";
 import { Lock, LockKeyhole, Eye, EyeClosed, RefreshCcw } from "lucide-react";
@@ -29,6 +27,12 @@ import { toast } from "sonner";
 import { trpc } from "@/lib/trpc/client";
 import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
 import LoadingButton from "@/components/loading-button";
+import {
+  SectionContent,
+  SectionItemDescription,
+  SectionItemHeader,
+  SectionItemTitle,
+} from "@/components/section";
 
 export function TwoFactorBackupCodes() {
   const [open, setOpen] = useState(false);
@@ -70,95 +74,91 @@ export function TwoFactorBackupCodes() {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Lock className="size-5" /> 2FA Backup Codes
-        </CardTitle>
-        <CardDescription>
+    <SectionContent>
+      <SectionItemHeader>
+        <SectionItemTitle className="flex items-center gap-2">
+          <Lock className="size-4" /> 2FA Backup Codes
+        </SectionItemTitle>
+        <SectionItemDescription>
           Backup codes are used to access your account if you lose access to
           your authenticator app.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        {viewBackupCodes ? (
-          <div className="space-y-4">
-            <div className="flex flex-wrap items-center gap-2 justify-between">
-              <Button onClick={() => setViewBackupCodes(false)}>
-                <EyeClosed className="size-4" />
-                <span>Hide Backup Codes</span>
-              </Button>
-              <Dialog open={open} onOpenChange={setOpen}>
-                <DialogTrigger asChild>
-                  <Button variant="outline">
-                    <RefreshCcw className="size-4" />
-                    <span>Regenerate Codes</span>
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle className="text-center flex flex-col items-center gap-4">
-                      <LockKeyhole className="size-5" />
-                      Confirm Password
-                    </DialogTitle>
-                    <DialogDescription className="text-center">
-                      Please enter your password to regenerate backup codes.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <Field>
-                    <FieldLabel htmlFor="password">Password</FieldLabel>
-                    <PasswordInput
-                      id="password"
-                      required
-                      value={twoFactorPassword}
-                      onChange={(e) => setTwoFactorPassword(e.target.value)}
-                      placeholder="Enter your password"
-                    />
-                    <FieldDescription>
-                      Enter your password to confirm.
-                    </FieldDescription>
-                  </Field>
-                  <DialogFooter>
-                    <LoadingButton
-                      className="w-full"
-                      onClick={() =>
-                        regenerateTwoFactorBackupCodesMutation.mutate(
-                          twoFactorPassword
-                        )
-                      }
-                      disabled={!twoFactorPassword}
-                      isLoading={
-                        regenerateTwoFactorBackupCodesMutation.isPending
-                      }
-                    >
-                      Confirm
-                    </LoadingButton>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
-            </div>
-            <div className="space-y-2 bg-muted p-4 rounded-md">
-              {listTwoFactorBackupCodesQuery.data?.backupCodes?.map(
-                (code, index) => (
-                  <div className="text-sm" key={index}>
-                    {code}
-                  </div>
-                )
-              )}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Each backup code can be used once to access your account and will
-              be removed after use. If you need more backup codes, you can
-              generate new ones.
-            </p>
+        </SectionItemDescription>
+      </SectionItemHeader>
+      {viewBackupCodes ? (
+        <div className="space-y-4">
+          <div className="flex flex-wrap items-center gap-2 justify-between">
+            <Button onClick={() => setViewBackupCodes(false)}>
+              <EyeClosed className="size-4" />
+              <span>Hide Backup Codes</span>
+            </Button>
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline">
+                  <RefreshCcw className="size-4" />
+                  <span>Regenerate Codes</span>
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle className="text-center flex flex-col items-center gap-4">
+                    <LockKeyhole className="size-5" />
+                    Confirm Password
+                  </DialogTitle>
+                  <DialogDescription className="text-center">
+                    Please enter your password to regenerate backup codes.
+                  </DialogDescription>
+                </DialogHeader>
+                <Field>
+                  <FieldLabel htmlFor="password">Password</FieldLabel>
+                  <PasswordInput
+                    id="password"
+                    required
+                    value={twoFactorPassword}
+                    onChange={(e) => setTwoFactorPassword(e.target.value)}
+                    placeholder="Enter your password"
+                  />
+                  <FieldDescription>
+                    Enter your password to confirm.
+                  </FieldDescription>
+                </Field>
+                <DialogFooter>
+                  <LoadingButton
+                    className="w-full"
+                    onClick={() =>
+                      regenerateTwoFactorBackupCodesMutation.mutate(
+                        twoFactorPassword
+                      )
+                    }
+                    disabled={!twoFactorPassword}
+                    isLoading={regenerateTwoFactorBackupCodesMutation.isPending}
+                  >
+                    Confirm
+                  </LoadingButton>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
-        ) : (
-          <Button onClick={() => setViewBackupCodes(true)}>
-            <Eye />
-            <span>View Backup Codes</span>
-          </Button>
-        )}
-      </CardContent>
-    </Card>
+          <div className="space-y-2 bg-muted p-4 rounded-md">
+            {listTwoFactorBackupCodesQuery.data?.backupCodes?.map(
+              (code, index) => (
+                <div className="text-sm" key={index}>
+                  {code}
+                </div>
+              )
+            )}
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Each backup code can be used once to access your account and will be
+            removed after use. If you need more backup codes, you can generate
+            new ones.
+          </p>
+        </div>
+      ) : (
+        <Button onClick={() => setViewBackupCodes(true)}>
+          <Eye />
+          <span>View Backup Codes</span>
+        </Button>
+      )}
+    </SectionContent>
   );
 }
