@@ -104,8 +104,8 @@ export function EnableTwoFactorDialog() {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button className="flex gap-1">
-          <ShieldCheck className="size-5" />
+        <Button>
+          <ShieldCheck />
           Enable 2FA
         </Button>
       </DialogTrigger>

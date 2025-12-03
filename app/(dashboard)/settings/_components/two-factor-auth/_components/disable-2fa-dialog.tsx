@@ -61,7 +61,7 @@ export function DisableTwoFactorAuth() {
       }}
     >
       <DialogTrigger asChild>
-        <Button variant={"destructive"} className="w-full sm:w-auto">
+        <Button variant={"destructive"}>
           <ShieldAlert />
           Disable 2FA
         </Button>

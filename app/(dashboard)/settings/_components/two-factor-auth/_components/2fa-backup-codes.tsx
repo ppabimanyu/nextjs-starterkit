@@ -102,8 +102,7 @@ export function TwoFactorBackupCodes() {
                       Confirm Password
                     </DialogTitle>
                     <DialogDescription className="text-center">
-                      Please enter your password to enable two-factor
-                      authentication.
+                      Please enter your password to regenerate backup codes.
                     </DialogDescription>
                   </DialogHeader>
                   <Field>

@@ -22,6 +22,8 @@ import {
   Tv,
   Watch,
   Gamepad2,
+  MonitorSmartphone,
+  LogOut,
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -31,6 +33,18 @@ import { UAParser } from "ua-parser-js";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import moment from "moment";
 import Link from "next/link";
+import {
+  Section,
+  SectionContent,
+  SectionDescription,
+  SectionHeader,
+  SectionItem,
+  SectionItemDescription,
+  SectionItemHeader,
+  SectionItemTitle,
+  SectionTitle,
+} from "@/components/section";
+import LoadingButton from "@/components/loading-button";
 
 function getDeviceIcon(deviceType: string | undefined) {
   switch (deviceType) {
@@ -51,7 +65,7 @@ function getDeviceIcon(deviceType: string | undefined) {
   }
 }
 
-export default function SessionsPage() {
+export default function SettingsSessionsPage() {
   const [revoking, setRevoking] = useState<string | null>(null);
 
   const currentSession = authClient.useSession();
@@ -103,41 +117,17 @@ export default function SessionsPage() {
 
   return (
     <div className="space-y-4">
-      {/* Security Notice */}
-      <Card className="border-blue-500/20 bg-blue-500/5">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
-            <Shield className="size-5" />
-            Security Notice
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="-mt-4">
-          <p className="text-xs text-muted-foreground">
-            If you notice any suspicious activity or unrecognized sessions,
-            revoke them immediately and{" "}
-            <Button
-              variant="link"
-              className="p-0 h-auto font-normal text-blue-600 dark:text-blue-400 hover:no-underline"
-              asChild
-            >
-              <Link href="/settings/password">change your password</Link>
-            </Button>
-            . This helps protect your account from unauthorized access.
-          </p>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Shield className="size-5" />
+      <Section>
+        <SectionHeader>
+          <SectionTitle className="flex items-center gap-2">
+            <MonitorSmartphone className="size-5" />
             Active Sessions
-          </CardTitle>
-          <CardDescription>
+          </SectionTitle>
+          <SectionDescription>
             Manage sessions across all your devices
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+          </SectionDescription>
+        </SectionHeader>
+        <SectionContent>
           <div className="space-y-5">
             {listSessionsQuery.data?.map((session, index) => {
               const isCurrent = session.id === currentSession?.data?.session.id;
@@ -196,30 +186,51 @@ export default function SessionsPage() {
                       </div>
                     </div>
                     {!isCurrent && (
-                      <Button
+                      <LoadingButton
                         variant="outline"
                         size="sm"
                         onClick={() => handleRevokeSession(session.token)}
-                        disabled={
-                          revoking === session.token ||
-                          revokeSessionMutation.isPending
-                        }
+                        disabled={revokeSessionMutation.isPending}
+                        isLoading={revoking === session.token}
                         className="h-8"
                       >
-                        Revoke{" "}
-                        {revokeSessionMutation.isPending &&
-                          revoking === session.token && (
-                            <Spinner className="ml-2" />
-                          )}
-                      </Button>
+                        <LogOut />
+                        Revoke
+                      </LoadingButton>
                     )}
                   </div>
                 </div>
               );
             })}
           </div>
-        </CardContent>
-      </Card>
+        </SectionContent>
+      </Section>
+
+      {/* Security Notice */}
+      <SectionContent className="border-blue-500/20 bg-blue-500/5">
+        <SectionItem>
+          <SectionItemHeader>
+            <SectionItemTitle className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
+              <Shield className="size-5" />
+              Security Notice
+            </SectionItemTitle>
+            <SectionItemDescription>
+              <p className="text-xs text-muted-foreground">
+                If you notice any suspicious activity or unrecognized sessions,
+                revoke them immediately and{" "}
+                <Button
+                  variant="link"
+                  className="p-0 h-auto font-normal text-blue-600 dark:text-blue-400 hover:no-underline"
+                  asChild
+                >
+                  <Link href="/settings/password">change your password</Link>
+                </Button>
+                . This helps protect your account from unauthorized access.
+              </p>
+            </SectionItemDescription>
+          </SectionItemHeader>
+        </SectionItem>
+      </SectionContent>
     </div>
   );
 }
