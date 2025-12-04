@@ -23,9 +23,12 @@ import {
   CheckCircle2,
   LockKeyhole,
   TriangleAlert,
+  Camera,
+  X,
+  Loader2,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import LoadingButton from "@/components/loading-button";
 import {
   Section,
@@ -50,10 +53,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { PasswordInput } from "@/components/password-input";
+import { trpc } from "@/lib/trpc/client";
 
 export function SettingsProfilePage() {
   // Get session data
-  const { data, error, isPending } = authClient.useSession();
+  const { data, error, isPending, refetch } = authClient.useSession();
   if (error) {
     toast.error("Failed to get session data");
   }
@@ -119,6 +123,62 @@ export function SettingsProfilePage() {
     },
   });
 
+  // Avatar upload
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+
+  const uploadAvatarMutation = trpc.user.uploadAvatar.useMutation({
+    onSuccess: (data) => {
+      toast.success(data.message);
+      setPreviewImage(null);
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(error.message);
+      setPreviewImage(null);
+    },
+  });
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("Invalid file type. Allowed: JPG, PNG, GIF, WebP");
+      return;
+    }
+
+    // Validate file size (800KB)
+    if (file.size > 800 * 1024) {
+      toast.error("File too large. Maximum size is 800KB");
+      return;
+    }
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setPreviewImage(event.target?.result as string);
+    };
+    reader.readAsDataURL(file);
+
+    // Convert to base64 and upload
+    const arrayBuffer = await file.arrayBuffer();
+    const base64 = Buffer.from(arrayBuffer).toString("base64");
+
+    uploadAvatarMutation.mutate({
+      fileBase64: base64,
+      fileName: file.name,
+      contentType: file.type,
+    });
+
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
   // Delete account
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletePassword, setDeletePassword] = useState("");
@@ -179,19 +239,91 @@ export function SettingsProfilePage() {
             <SectionItemHeader>
               <SectionItemTitle>Profile Picture</SectionItemTitle>
               <SectionItemDescription>
-                JPG, GIF or PNG. Max size of 800K.
+                JPG, GIF, PNG or WebP. Max size of 800KB.
               </SectionItemDescription>
             </SectionItemHeader>
             <SectionItemContent>
-              <Avatar className="h-10 w-10">
-                <AvatarImage
-                  src={data?.user.image || ""}
-                  alt={data?.user.name || "User"}
+              <div className="flex items-center gap-4">
+                {/* Hidden file input */}
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  accept="image/jpeg,image/png,image/gif,image/webp"
+                  onChange={handleFileChange}
+                  className="hidden"
+                  id="avatar-upload"
                 />
-                <AvatarFallback className="text-lg">
-                  {userInitials}
-                </AvatarFallback>
-              </Avatar>
+
+                {/* Avatar with click to upload */}
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploadAvatarMutation.isPending}
+                  className="relative group cursor-pointer disabled:cursor-not-allowed"
+                >
+                  <Avatar className="h-12 w-12">
+                    <AvatarImage
+                      src={previewImage || data?.user.image || ""}
+                      alt={data?.user.name || "User"}
+                    />
+                    <AvatarFallback className="text-xl">
+                      {userInitials}
+                    </AvatarFallback>
+                  </Avatar>
+
+                  {/* Hover overlay */}
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                    {uploadAvatarMutation.isPending ? (
+                      <Loader2 className="size-5 text-white animate-spin" />
+                    ) : (
+                      <Camera className="size-5 text-white" />
+                    )}
+                  </div>
+                </button>
+
+                {/* Action buttons */}
+                {/* <div className="flex flex-col gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={uploadAvatarMutation.isPending}
+                  >
+                    {uploadAvatarMutation.isPending ? (
+                      <>
+                        <Loader2 className="size-4 animate-spin" />
+                        Uploading...
+                      </>
+                    ) : (
+                      <>
+                        <Camera className="size-4" />
+                        Change Photo
+                      </>
+                    )}
+                  </Button>
+                  {data?.user.image && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleRemoveAvatar}
+                      disabled={deleteAvatarMutation.isPending}
+                      className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                    >
+                      {deleteAvatarMutation.isPending ? (
+                        <>
+                          <Loader2 className="size-4 animate-spin" />
+                          Removing...
+                        </>
+                      ) : (
+                        <>
+                          <X className="size-4" />
+                          Remove
+                        </>
+                      )}
+                    </Button>
+                  )}
+                </div> */}
+              </div>
             </SectionItemContent>
           </SectionItem>
           <Separator />

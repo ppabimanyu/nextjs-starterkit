@@ -11,6 +11,12 @@ export const env = createEnv({
     AUTH_GITHUB_CLIENT_ID: z.string().optional(),
     AUTH_GITHUB_CLIENT_SECRET: z.string().optional(),
     AUTH_REQUIRED_EMAIL_VERIFICATION: z.boolean().optional().default(false),
+    // Storage configuration
+    STORAGE_PROVIDER: z
+      .enum(["local", "vercel-blob"])
+      .optional()
+      .default("local"),
+    BLOB_READ_WRITE_TOKEN: z.string().optional(),
   },
   client: {
     NEXT_PUBLIC_SITE_URL: z.string().optional(),
@@ -49,5 +55,11 @@ export const env = createEnv({
       process.env.NEXT_PUBLIC_AUTH_ENABLE_2FA == "true",
     AUTH_REQUIRED_EMAIL_VERIFICATION:
       process.env.AUTH_REQUIRED_EMAIL_VERIFICATION == "true",
+    // Storage configuration
+    STORAGE_PROVIDER: process.env.STORAGE_PROVIDER as
+      | "local"
+      | "vercel-blob"
+      | undefined,
+    BLOB_READ_WRITE_TOKEN: process.env.BLOB_READ_WRITE_TOKEN,
   },
 });
