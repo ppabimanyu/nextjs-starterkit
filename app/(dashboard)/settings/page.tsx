@@ -25,14 +25,14 @@ export default function SettingsPage() {
           <Settings className="size-5" />
           <h2 className="text-lg font-medium">Settings</h2>
         </div>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-xs text-muted-foreground">
           Manage your account settings and security preferences.
         </p>
       </div>
-      <Separator />
+      <div className="flex w-dwh border-t -mx-4" />
       <Tabs
         defaultValue="profile"
-        className="w-full md:w-3xl mx-auto space-y-4"
+        className="w-full md:w-3xl mx-auto space-y-8"
       >
         <div>
           <TabsList className="w-full overflow-scroll scrollbar-hidden">
