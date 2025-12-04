@@ -39,7 +39,7 @@ import {
   SectionTitle,
 } from "@/components/section";
 
-export default function SettingsPasswordPage() {
+export function SettingsPasswordPage() {
   const form = useForm({
     defaultValues: {
       currentPassword: "",

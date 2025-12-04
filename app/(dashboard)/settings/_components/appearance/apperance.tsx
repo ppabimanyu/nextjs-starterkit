@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 import { Monitor, Moon, Palette, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
-export default function SettingsAppearancePage() {
+export function SettingsAppearancePage() {
   const { setTheme, theme } = useTheme();
 
   return (

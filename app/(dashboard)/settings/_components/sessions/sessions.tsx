@@ -65,7 +65,7 @@ function getDeviceIcon(deviceType: string | undefined) {
   }
 }
 
-export default function SettingsSessionsPage() {
+export function SettingsSessionsPage() {
   const [revoking, setRevoking] = useState<string | null>(null);
 
   const currentSession = authClient.useSession();

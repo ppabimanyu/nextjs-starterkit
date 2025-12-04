@@ -37,7 +37,7 @@ import {
 } from "@/components/section";
 import { Badge } from "@/components/ui/badge";
 
-export default function SettingsTwoFactorAuthPage() {
+export function SettingsTwoFactorAuthPage() {
   const session = authClient.useSession();
   if (session.error) {
     toast.error(`Failed to get session, ${session.error.message}`);

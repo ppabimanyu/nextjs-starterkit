@@ -11,11 +11,11 @@ import {
 } from "lucide-react";
 import { env } from "@/env";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import SettingsProfilePage from "./_components/profile/page";
-import SettingsPasswordPage from "./_components/password/page";
-import SettingsSessionsPage from "./_components/sessions/page";
-import SettingsTwoFactorAuthPage from "./_components/two-factor-auth/page";
-import SettingsAppearancePage from "./_components/appearance/page";
+import { SettingsProfilePage } from "./_components/profile/profile";
+import { SettingsPasswordPage } from "./_components/password/password";
+import { SettingsSessionsPage } from "./_components/sessions/sessions";
+import { SettingsTwoFactorAuthPage } from "./_components/two-factor-auth/two-factor-auth";
+import { SettingsAppearancePage } from "./_components/appearance/apperance";
 
 export default function SettingsPage() {
   return (

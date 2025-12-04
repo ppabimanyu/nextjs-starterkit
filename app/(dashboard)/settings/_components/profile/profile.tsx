@@ -63,7 +63,7 @@ import {
 } from "@/components/ui/dialog";
 import { PasswordInput } from "@/components/password-input";
 
-export default function SettingsProfilePage() {
+export function SettingsProfilePage() {
   // Get session data
   const { data, error, isPending } = authClient.useSession();
   if (error) {
