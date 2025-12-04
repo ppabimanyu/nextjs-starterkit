@@ -3,21 +3,12 @@
 import LoadingContent from "@/components/loading-content";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
   Field,
   FieldDescription,
   FieldError,
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Spinner } from "@/components/ui/spinner";
 import { authClient } from "@/lib/auth-client";
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
@@ -30,19 +21,16 @@ import {
   Trash2,
   AlertTriangle,
   CheckCircle2,
-  ShieldCheck,
   LockKeyhole,
   TriangleAlert,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
-import ConfirmPasswordDialog from "@/components/confirm-password-dialog";
 import LoadingButton from "@/components/loading-button";
 import {
   Section,
   SectionContent,
   SectionDescription,
-  SectionFooter,
   SectionHeader,
   SectionItem,
   SectionItemContent,
